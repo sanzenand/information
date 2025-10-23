@@ -10,7 +10,7 @@
   <style>
     :root{--bg:#07060a;--card:rgba(255,255,255,0.02);--muted:#9aa7bf;--accent:#6b46c1;--radius:12px;--maxw:980px}
     *{box-sizing:border-box}
-    body{margin:0;min-height:100%;font-family:Inter,system-ui,Arial;color:#e8eef8;background:#0b0b0e url('https://images.unsplash.com/photo-1614064642307-29f7c3a5f3b3?auto=format&fit=crop&w=1920&q=80') center/cover fixed}
+    body{margin:0;min-height:100%;font-family:Inter,system-ui,Arial,color-scheme:dark;color:#e8eef8;background:#0b0b0e url('https://images.unsplash.com/photo-1614064642307-29f7c3a5f3b3?auto=format&fit=crop&w=1920&q=80') center/cover fixed}
     .wrap{min-height:100vh;backdrop-filter:blur(6px);background:linear-gradient(180deg,rgba(2,6,23,0.55),rgba(2,6,23,0.7));display:flex;align-items:flex-start;justify-content:center;padding:40px 16px}
     .card{width:100%;max-width:var(--maxw);background:var(--card);border-radius:var(--radius);padding:20px;box-shadow:0 12px 40px rgba(2,6,23,0.6)}
     header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
@@ -54,7 +54,7 @@
 
           <section class="section" style="margin-top:12px">
             <div class="h">Отзывы с FunPay</div>
-            <div class="muted">Автоматически обновляются из репозитория. Если пусто — дождитесь первой синхронизации Action'а.</div>
+            <div class="muted">Автоматически обновляются из репозитория через GitHub Actions.</div>
             <div id="reviews" class="reviews-list" style="margin-top:10px">
               <div class="tsmall">Загрузка отзывов…</div>
             </div>
@@ -63,6 +63,12 @@
           <section class="section" style="margin-top:12px">
             <div class="h">Посты с TG‑канала (sanzenand_fp)</div>
             <div class="muted">Копии постов автоматически импортируются из канала и отображаются ниже.</div>
+
+            <!-- Встроенный пост №2 (официальный виджет) -->
+            <div style="margin:12px 0">
+              <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-post="sanzenand_fp/2" data-width="100%"></script>
+            </div>
+
             <div id="tgposts" class="posts-list" style="margin-top:10px">
               <div class="tsmall">Загрузка постов…</div>
             </div>
@@ -81,12 +87,12 @@
 
           <div class="section" style="margin-top:12px">
             <div class="h">Как публиковать</div>
-            <div class="muted">Отзывы: собираются с FunPay автоматически. Посты: публикуй в TG‑канале @sanzenand_fp — Action импортирует их.<br><br>Если хочешь добавить отзыв вручную — открой Issues репозитория и создай Issue.</div>
+            <div class="muted">Отзывы: собираются с FunPay автоматически. Посты: публикуй в TG‑канале @sanzenand_fp — Action импортирует их.<br><br>Если нужно — можно добавить шаблон Issues в репозитории для ручной публикации.</div>
           </div>
 
           <div class="section" style="margin-top:12px">
             <div class="h">Безопасность</div>
-            <div class="muted">Данные отображаются только из JSON-файлов в репозитории; сайт экранирует HTML и не выполняет пользовательские скрипты.</div>
+            <div class="muted">Данные отображаются из JSON-файлов в репозитории; текст экранируется и не выполняется как HTML/скрипты.</div>
           </div>
         </aside>
       </div>
@@ -95,11 +101,7 @@
     </div>
   </div>
 
-  <!-- Telegram widget (показывает ссылку/preview канала) -->
-  <script async src="https://telegram.org/js/telegram-widget.js?14" data-telegram-post="sanzenand_fp/1" data-width="100%"></script>
-
   <script>
-    // Путь к JSON-файлам в репозитории (они будут созданы Action'ом)
     const REVIEWS_JSON = './reviews.json';
     const TGPOSTS_JSON = './tg_posts.json';
 
@@ -108,10 +110,10 @@
       return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
 
-    async function loadJSON(url){
+    async function fetchJSONNoCache(url){
       try{
         const res = await fetch(url, {cache: "no-cache"});
-        if(!res.ok) throw new Error('not found');
+        if(!res.ok) return null;
         return await res.json();
       }catch(e){
         return null;
@@ -120,15 +122,15 @@
 
     async function renderReviews(){
       const container = document.getElementById('reviews');
-      const data = await loadJSON(REVIEWS_JSON);
+      const data = await fetchJSONNoCache(REVIEWS_JSON);
       if(!data || !Array.isArray(data) || data.length===0){
-        container.innerHTML = '<div class="tsmall">Отзывов пока нет. Подключи Action для сбора отзывов с FunPay.</div>';
+        container.innerHTML = '<div class="tsmall">Отзывов пока нет. Дождитесь запуска workflow или проверьте logs Actions.</div>';
         return;
       }
       container.innerHTML = '';
-      data.forEach(r=>{
+      data.forEach(r => {
         const author = escapeText(r.author || 'Пользователь');
-        const rating = escapeText(String(r.rating || ''));
+        const rating = escapeText(r.rating || '');
         const text = escapeText(r.text || '');
         const time = escapeText(r.time || '');
         const el = document.createElement('div');
@@ -140,19 +142,19 @@
 
     async function renderTGPosts(){
       const container = document.getElementById('tgposts');
-      const data = await loadJSON(TGPOSTS_JSON);
+      const data = await fetchJSONNoCache(TGPOSTS_JSON);
       if(!data || !Array.isArray(data) || data.length===0){
-        container.innerHTML = '<div class="tsmall">Постов пока нет. Подключи Action для импорта TG‑канала.</div>';
+        container.innerHTML = '<div class="tsmall">Постов пока нет. Дождитесь запуска workflow или проверьте logs Actions.</div>';
         return;
       }
       container.innerHTML = '';
-      data.forEach(p=>{
-        const title = escapeText(p.title || '');
-        const text = escapeText(p.text || '');
+      data.forEach(p => {
         const time = escapeText(p.time || '');
+        const text = escapeText(p.text || '');
+        const link = escapeText(p.link || '');
         const el = document.createElement('div');
         el.className = 'post';
-        el.innerHTML = `<div class="meta">${time}</div><div style="margin-top:6px">${title ? '<strong>'+title+'</strong><br>' : ''}${text}</div>`;
+        el.innerHTML = `<div class="meta">${link ? `<a href="${link}" target="_blank" rel="noopener noreferrer">${link}</a>` : ''} <span style="color:var(--muted)">• ${time}</span></div><div style="margin-top:6px">${text.replace(/\n/g,'<br>')}</div>`;
         container.appendChild(el);
       });
     }
@@ -160,7 +162,6 @@
     (async function init(){
       await renderReviews();
       await renderTGPosts();
-      // автообновление каждые 3 минуты
       setInterval(async ()=>{
         await renderReviews();
         await renderTGPosts();
