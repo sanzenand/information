@@ -11,98 +11,114 @@
 
   <style>
     :root{
-      --maxw:980px;
+      --maxw:780px;
       --accent:#7c3aed;
+      --accent-glow:rgba(124,58,237,0.4);
       --muted:#a9b6cc;
       --card-bg: rgba(255,255,255,0.03);
       --glass: rgba(255,255,255,0.02);
       --radius:14px;
     }
     *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial;background:#05050a;color:#eef2ff}
-    body{display:flex;align-items:center;justify-content:center;padding:28px;background:url('https://i.pinimg.com/originals/3f/2d/3b/3f2d3b4f5a5e5e5e5e5e5e5e5e5e5e5e.jpg') center/cover fixed}
-    .wrap{width:100%;max-width:var(--maxw);background:linear-gradient(180deg, rgba(2,6,23,0.55), rgba(2,6,23,0.75));border-radius:18px;padding:22px;box-shadow:0 18px 60px rgba(2,6,23,0.7);backdrop-filter: blur(6px)}
-    header{display:flex;gap:16px;align-items:center}
-    .avatar{width:96px;height:96px;border-radius:16px;flex-shrink:0;background:linear-gradient(135deg,var(--accent),#ff4d6d);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:28px;overflow:hidden;border:1px solid rgba(255,255,255,0.04)}
-    .avatar img, .avatar video{width:100%;height:100%;object-fit:cover;display:block}
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial;background:#05050a;color:#eef2ff;overflow-x:hidden}
+    body{display:flex;align-items:center;justify-content:center;padding:20px;position:relative}
+    .bg-video{position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:-2}
+    .bg-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg, rgba(5,5,10,0.8), rgba(2,6,23,0.9));z-index:-1}
+    .wrap{width:100%;max-width:var(--maxw);background:linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));border-radius:20px;padding:24px;box-shadow:0 25px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05);backdrop-filter:blur(12px);animation:fadeInUp 0.8s cubic-bezier(0.23,1,0.32,1) both;position:relative;overflow:hidden}
+    .wrap::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg, transparent, var(--accent-glow), transparent)}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+    header{display:flex;gap:18px;align-items:center;margin-bottom:8px}
+    .avatar{width:72px;height:72px;border-radius:16px;flex-shrink:0;background:linear-gradient(135deg,var(--accent),#ff4d6d);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:26px;overflow:hidden;border:2px solid rgba(255,255,255,0.1);transition:all 0.4s cubic-bezier(0.23,1,0.32,1);position:relative}
+    .avatar::after{content:'';position:absolute;inset:-2px;background:linear-gradient(135deg,var(--accent),#ff4d6d);border-radius:18px;z-index:-1;opacity:0;transition:opacity 0.4s}
+    .avatar:hover{transform:scale(1.08) rotate(2deg);border-color:transparent;box-shadow:0 10px 30px var(--accent-glow)}
+    .avatar:hover::after{opacity:1}
+    .avatar img,.avatar video{width:100%;height:100%;object-fit:cover;display:block;border-radius:14px}
     .title{flex:1}
-    h1{margin:0;font-size:20px;letter-spacing:0.4px;min-height:32px}
-    .subtitle{color:var(--muted);font-size:13px;margin-top:6px}
-    .bio-card{margin-top:18px;padding:18px;border-radius:12px;background:var(--card-bg);border:1px solid rgba(255,255,255,0.03)}
-    .typing{font-family:'Inter',system-ui,Arial;color:#f7fbff;font-weight:600;font-size:18px;min-height:28px;white-space:pre-wrap;overflow:hidden}
-    .cursor{display:inline-block;width:10px;height:22px;background:var(--accent);margin-left:6px;vertical-align:middle;animation:blink 1s step-start infinite;border-radius:3px}
-    @keyframes blink{50%{opacity:0}}
-    .cols{display:grid;grid-template-columns:1fr 340px;gap:16px;margin-top:14px}
-    @media(max-width:920px){.cols{grid-template-columns:1fr}.avatar{width:80px;height:80px}}
-    .side{background:var(--glass);padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.02)}
-    .links a{display:block;color:#fff;text-decoration:none;padding:8px;border-radius:8px;margin-bottom:8px;background:linear-gradient(90deg,rgba(255,255,255,0.02),rgba(0,0,0,0.03));border:1px solid rgba(255,255,255,0.02)}
-    .muted{color:var(--muted);font-size:13px}
-    footer{margin-top:18px;text-align:center;color:var(--muted);font-size:13px}
-
-    /* Rating stars */
-    .rating{display:flex;gap:4px;margin:12px 0}
-    .star{cursor:pointer;font-size:24px;color:#444;transition:color 0.2s}
-    .star:hover,.star.active{color:gold}
-    .review-area{width:100%;margin-top:12px;padding:12px;border-radius:8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:white;font-family:inherit;resize:vertical}
-    .review-buttons{display:flex;gap:8px;margin-top:8px}
-    .review-btn{padding:6px 12px;border-radius:6px;border:none;cursor:pointer;font-family:inherit}
-    .submit-btn{background:var(--accent);color:white}
-    .cancel-btn{background:rgba(255,255,255,0.1);color:white}
+    h1{margin:0;font-size:24px;font-weight:700;background:linear-gradient(135deg, #fff, var(--muted));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:0.5px}
+    .subtitle{color:var(--muted);font-size:14px;margin-top:6px;font-weight:300}
+    .bio-card{margin-top:20px;padding:22px;border-radius:16px;background:var(--card-bg);border:1px solid rgba(255,255,255,0.06);animation:slideUp 0.6s cubic-bezier(0.23,1,0.32,1) 0.2s both;position:relative}
+    .bio-card::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg, rgba(124,58,237,0.03), transparent);border-radius:16px;opacity:0;transition:opacity 0.4s}
+    .bio-card:hover::before{opacity:1}
+    @keyframes slideUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+    .cols{display:grid;grid-template-columns:1fr 300px;gap:20px;margin-top:16px}
+    @media(max-width:768px){.cols{grid-template-columns:1fr}.avatar{width:64px;height:64px;font-size:22px}}
+    .side{background:var(--glass);padding:18px;border-radius:14px;border:1px solid rgba(255,255,255,0.04);position:relative;overflow:hidden;opacity:0;transform:translateX(100px);animation:slideInRight 0.8s cubic-bezier(0.23,1,0.32,1) 0.6s forwards}
+    @keyframes slideInRight{to{opacity:1;transform:translateX(0)}}
+    .side::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg, var(--accent), #ff4d6d);transform:scaleY(0);transition:transform 0.4s cubic-bezier(0.23,1,0.32,1)}
+    .side:hover::before{transform:scaleY(1)}
+    .links a{display:flex;align-items:center;color:#fff;text-decoration:none;padding:12px 14px;border-radius:12px;margin-bottom:12px;background:linear-gradient(135deg, rgba(255,255,255,0.04), rgba(0,0,0,0.1));border:1px solid rgba(255,255,255,0.06);transition:all 0.3s cubic-bezier(0.23,1,0.32,1);position:relative;overflow:hidden;opacity:0;transform:translateX(50px);animation:slideInLink 0.6s cubic-bezier(0.23,1,0.32,1) forwards}
+    .links a:nth-child(1){animation-delay:0.8s}
+    .links a:nth-child(2){animation-delay:0.9s}
+    .links a:nth-child(3){animation-delay:1.0s}
+    .links a:nth-child(4){animation-delay:1.1s}
+    .links a:nth-child(5){animation-delay:1.2s}
+    @keyframes slideInLink{to{opacity:1;transform:translateX(0)}}
+    .links a::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);transition:left 0.6s}
+    .links a:hover{transform:translateX(8px) translateY(-2px);border-color:rgba(124,58,237,0.3);background:linear-gradient(135deg, rgba(124,58,237,0.1), rgba(0,0,0,0.15));box-shadow:0 8px 20px rgba(0,0,0,0.2)}
+    .links a:hover::before{left:100%}
+    .muted{color:var(--muted);font-size:14px;line-height:1.6}
+    .guarantee-box{background:linear-gradient(135deg, rgba(255,0,0,0.1), rgba(255,77,77,0.15));border:1px solid rgba(255,0,0,0.3);border-radius:12px;padding:16px;margin-top:16px;animation:pulseRed 2s infinite}
+    @keyframes pulseRed{0%{box-shadow:0 0 0 0 rgba(255,0,0,0.3)}70%{box-shadow:0 0 0 10px rgba(255,0,0,0)}100%{box-shadow:0 0 0 0 rgba(255,0,0,0)}}
+    .warning-text{color:#ff4444;font-weight:700;font-size:16px;text-shadow:0 0 10px rgba(255,0,0,0.5);text-align:center;display:block}
+    footer{margin-top:22px;text-align:center;color:var(--muted);font-size:13px;animation:fadeIn 0.8s ease-out 0.6s both;opacity:0.7}
+    .pulse{animation:pulse 2s infinite}
+    @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(124,58,237,0.4)}70%{box-shadow:0 0 0 10px rgba(124,58,237,0)}100%{box-shadow:0 0 0 0 rgba(124,58,237,0)}}
   </style>
 </head>
 <body>
+  <video class="bg-video" autoplay muted loop playsinline id="bgVideo">
+    <source src="background.mp4" type="video/mp4">
+  </video>
+  <div class="bg-overlay"></div>
+
   <div class="wrap" role="main" aria-label="BIO Sanzenand">
     <header>
-      <div class="avatar" id="avatar">
+      <div class="avatar pulse" id="avatar">
         <span id="avatarInitial">S</span>
       </div>
       <div class="title">
-        <h1 id="animatedTitle"></h1><span class="cursor" id="titleCursor"></span>
-        <div class="subtitle">@sanzenand — продавец и разработчик ботов</div>
+        <h1>sanzenand</h1>
+        <div class="subtitle">продавец и разработчик ботов</div>
       </div>
     </header>
 
     <div class="bio-card">
-      <div class="typing" id="typingArea" aria-live="polite"></div><span class="cursor" id="cursor" aria-hidden="true"></span>
-
       <div class="cols">
         <div>
-          <div style="margin-top:12px;color:#dfe9ff">
-            <strong>О себе</strong>
-            <p class="muted" style="margin-top:8px">Я — @sanzenand. Предоставляю услуги: создание Telegram и Discord ботов, продажа аккаунтов в играх и другие цифровые сервисы.</p>
+          <div style="margin-top:14px;color:#dfe9ff">
+            <strong style="display:block;margin-bottom:10px;font-size:16px">О себе</strong>
+            <p class="muted">Я — @sanzenand. Предоставляю услуги: создание Telegram и Discord ботов, продажа аккаунтов в играх и другие цифровые сервисы.</p>
           </div>
 
-          <div style="margin-top:12px">
-            <strong>Гарантии</strong>
-            <p class="muted" style="margin-top:8px">Быстрые и честные сделки. Работаю с проверенными методами, не участвую в скамах и не создаю мошеннических ботов.</p>
+          <div style="margin-top:20px">
+            <strong style="display:block;margin-bottom:10px;font-size:16px">Гарантии</strong>
+            <p class="muted">Быстрые и честные сделки. Работаю с проверенными методами, не участвую в скамах и не создаю мошеннических ботов.</p>
+            
+            <div class="guarantee-box">
+              <span class="warning-text">⚠️ НЕ УЧАСТВУЮ В СКАМЕ И НЕ СОЗДАЮ МОШЕННИЧЕСКИХ БОТОВ</span>
+            </div>
           </div>
         </div>
 
         <aside class="side" aria-label="Контакты">
           <div>
-            <div style="font-weight:700;margin-bottom:8px">Контакты</div>
+            <strong style="display:block;margin-bottom:14px;font-size:16px">Контакты</strong>
             <div class="links">
-              <a href="https://t.me/Sanzenand" target="_blank" rel="noopener noreferrer">Telegram — @Sanzenand</a>
-              <a href="https://t.me/mainsanzenand" target="_blank" rel="noopener noreferrer">БИО канал — @mainsanzenand</a>
-              <a href="https://t.me/sanzenand_fp" target="_blank" rel="noopener noreferrer">Отзывы канал — @sanzenand_fp</a>
-              <a href="https://t.me/newssanz" target="_blank" rel="noopener noreferrer">Игровой канал — @newssanz</a>
-              <a href="https://funpay.com/users/11006828/" target="_blank" rel="noopener noreferrer">FunPay — Sanzenand</a>
-            </div>
-            
-            <div style="margin-top:16px">
-              <div style="font-weight:700;margin-bottom:8px">Оставить отзыв</div>
-              <div class="rating" id="rating">
-                <span class="star" data-rating="1">★</span>
-                <span class="star" data-rating="2">★</span>
-                <span class="star" data-rating="3">★</span>
-                <span class="star" data-rating="4">★</span>
-                <span class="star" data-rating="5">★</span>
-              </div>
-              <textarea class="review-area" placeholder="Ваш комментарий..." rows="3"></textarea>
-              <div class="review-buttons">
-                <button class="review-btn submit-btn">Отправить</button>
-                <button class="review-btn cancel-btn">Отмена</button>
-              </div>
+              <a href="https://t.me/Sanzenand" target="_blank" rel="noopener noreferrer">
+                <span>Telegram — @Sanzenand</span>
+              </a>
+              <a href="https://t.me/mainsanzenand" target="_blank" rel="noopener noreferrer">
+                <span>БИО канал — @mainsanzenand</span>
+              </a>
+              <a href="https://t.me/sanzenand_fp" target="_blank" rel="noopener noreferrer">
+                <span>Отзывы канал — @sanzenand_fp</span>
+              </a>
+              <a href="https://t.me/newssanz" target="_blank" rel="noopener noreferrer">
+                <span>Игровой канал — @newssanz</span>
+              </a>
+              <a href="https://funpay.com/users/11006828/" target="_blank" rel="noopener noreferrer">
+                <span>FunPay — Sanzenand</span>
+              </a>
             </div>
           </div>
         </aside>
@@ -112,29 +128,15 @@
     <footer>© 2025 sanzenand</footer>
   </div>
 
-  <audio id="bgAudio" loop crossorigin="anonymous" preload="auto" autoplay></audio>
+  <audio id="bgAudio" loop crossorigin="anonymous" preload="auto"></audio>
 
   <script>
-    // Local filenames expected in repo root
     const LOCAL_AVATAR_VIDEO = 'avatar.mp4';
     const LOCAL_AVATAR_IMAGE = 'avatar.jpg';
     const LOCAL_MUSIC = 'Dasing.mp3';
 
-    // Typing lines
-    const lines = [
-      "Я — @sanzenand, известен на платформе FunPay как продавец",
-      "На данный момент имею рейтинг 5/5",
-      "Гарантирую вам: Быстрые и Честные сделки",
-      "Отвечаю и выполняю заказы в кратчайшие сроки",
-      "Попрошу вас подумать прежде чем: Спамить",
-      "Просить создать скам чего то, не имею отношения к скам-ботам⚠️"
-    ];
-
-    // Title animation
-    const titleText = "sanzenand";
-
-    // Utility
     function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+    
     async function urlExists(path){
       try{
         const res = await fetch(path, { method: 'HEAD' });
@@ -144,7 +146,6 @@
       }
     }
 
-    // Apply avatar: prefer video, then image, else initial
     async function applyAvatar(){
       const av = document.getElementById('avatar');
       av.innerHTML = '';
@@ -159,7 +160,6 @@
         v.style.height = '100%';
         v.style.objectFit = 'cover';
         av.appendChild(v);
-        console.info('Avatar video used:', LOCAL_AVATAR_VIDEO);
         return;
       }
       if(await urlExists(LOCAL_AVATAR_IMAGE)){
@@ -170,118 +170,46 @@
         img.style.height = '100%';
         img.style.objectFit = 'cover';
         av.appendChild(img);
-        console.info('Avatar image used:', LOCAL_AVATAR_IMAGE);
         return;
       }
       av.innerHTML = '<span id="avatarInitial">S</span>';
-      console.info('No local avatar found; using initial.');
     }
 
-    // Apply music: autoplay if available
     async function applyMusic(){
       const audio = document.getElementById('bgAudio');
       if(await urlExists(LOCAL_MUSIC)){
         audio.src = LOCAL_MUSIC;
         audio.volume = 0.25;
-        audio.play().catch(e => console.warn('Autoplay blocked:', e));
-        console.info('Local music autoplaying:', LOCAL_MUSIC);
-        return;
-      }
-      console.info('No local music found.');
-    }
-
-    // Title typing animation
-    async function typeTitle(){
-      const titleEl = document.getElementById('animatedTitle');
-      const cursor = document.getElementById('titleCursor');
-      
-      while(true){
-        // Type title
-        titleEl.textContent = '';
-        for(let i=0;i<titleText.length;i++){
-          titleEl.textContent += titleText[i];
-          await sleep(100);
-        }
         
-        await sleep(2000);
-        
-        // Delete title
-        while(titleEl.textContent.length > 0){
-          titleEl.textContent = titleEl.textContent.slice(0, -1);
-          await sleep(50);
-        }
-        
-        await sleep(500);
-      }
-    }
-
-    // Typing animation loop (type then delete)
-    const typingArea = document.getElementById('typingArea');
-    async function typeText(text, speed=40){
-      typingArea.textContent = '';
-      for(let i=0;i<text.length;i++){
-        typingArea.textContent += text[i];
-        await sleep(speed + Math.random()*30);
-      }
-    }
-    async function deleteText(speed=30){
-      let txt = typingArea.textContent;
-      while(txt.length){
-        txt = txt.slice(0,-1);
-        typingArea.textContent = txt;
-        await sleep(speed);
-      }
-    }
-    async function typingLoop(){
-      let i = 0;
-      while(true){
-        const line = lines[i % lines.length];
-        await typeText(line);
-        await sleep(2000);
-        await deleteText();
-        await sleep(400);
-        i++;
-      }
-    }
-
-    // Rating system
-    function initRating(){
-      const stars = document.querySelectorAll('.star');
-      let currentRating = 0;
-      
-      stars.forEach(star => {
-        star.addEventListener('click', () => {
-          currentRating = parseInt(star.dataset.rating);
-          updateStars(currentRating);
-        });
-        
-        star.addEventListener('mouseover', () => {
-          updateStars(parseInt(star.dataset.rating));
-        });
-        
-        star.addEventListener('mouseout', () => {
-          updateStars(currentRating);
-        });
-      });
-      
-      function updateStars(rating){
-        stars.forEach(s => {
-          if(parseInt(s.dataset.rating) <= rating){
-            s.classList.add('active');
-          } else {
-            s.classList.remove('active');
+        const playAudio = async () => {
+          try {
+            await audio.play();
+            document.removeEventListener('click', playAudio);
+            document.removeEventListener('touchstart', playAudio);
+          } catch(e) {
           }
-        });
+        };
+        
+        playAudio();
+        document.addEventListener('click', playAudio);
+        document.addEventListener('touchstart', playAudio);
       }
     }
 
-    // Init
+    async function checkBackgroundVideo(){
+      const bgVideo = document.getElementById('bgVideo');
+      try {
+        await bgVideo.play();
+      } catch(e) {
+        bgVideo.muted = true;
+        await bgVideo.play();
+      }
+    }
+
     (async function init(){
       await applyAvatar();
       await applyMusic();
-      initRating();
-      typeTitle().catch(()=>{});
-      typingLoop().catch(()=>{});
+      await checkBackgroundVideo();
     })();
   </script>
 </body>
