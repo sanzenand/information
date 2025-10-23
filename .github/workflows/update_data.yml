@@ -1,22 +1,25 @@
 name: Update FunPay reviews and TG posts
 on:
   schedule:
-    - cron: '0 */6 * * *'
-  workflow_dispatch:
+    - cron: '0 */6 * * *'   # каждые 6 часов
+  workflow_dispatch:        # запуск вручную
 
 jobs:
   update:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Debug listing root and action folder
+      - name: Debug: list repo root and action folder
         run: |
           echo "PWD: $(pwd)"
-          echo "Listing repo root:"
+          echo "Root listing:"
           ls -la
-          echo "Listing .github/actions/update-data:"
+          echo ".github/actions/update-data listing:"
           ls -la .github/actions/update-data || true
           echo "Check bash locations:"
           ls -la /bin/bash || true
@@ -28,17 +31,27 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install dependencies
+      - name: Install dependencies for scraper
         working-directory: .github/actions/update-data
         run: npm ci
         shell: bash
 
-      - name: Run scraper
+      - name: Run scraper (create/update reviews.json and tg_posts.json)
         working-directory: .github/actions/update-data
         env:
           FUNPAY_USER_URL: "https://funpay.com/users/11006828/"
-          TG_CHANNEL_URL: "https://t.me/sanzenand_fp"
+          TG_CHANNEL_WEB: "https://t.me/s/sanzenand_fp"
         run: node scrape.js
+        shell: bash
+
+      - name: Show generated files (for debug)
+        run: |
+          echo "Generated files in repo root:"
+          ls -la reviews.json tg_posts.json || true
+          echo "reviews.json preview:"
+          head -n 60 reviews.json || true
+          echo "tg_posts.json preview:"
+          head -n 60 tg_posts.json || true
         shell: bash
 
       - name: Commit data
@@ -47,7 +60,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add reviews.json tg_posts.json || true
           git commit -m "Update reviews and tg posts" || echo "No changes to commit"
-          git push
+          git push origin HEAD:main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
