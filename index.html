@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sanzen — bio & reviews</title>
+
+  <!-- Content Security Policy: минимизируем риски XSS и загрузки сторонних скриптов -->
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self' https:; script-src 'self' https://www.youtube.com https://www.youtube-nocookie.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; frame-src https://www.youtube.com https://www.youtube-nocookie.com; connect-src 'self' https://api.github.com;">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --accent:#8b5cf6;
+      --accent-2:#ff4777;
+      --glass: rgba(255,255,255,0.03);
+      --text:#e9eef8;
+      --muted: #9aa7bf;
+      --card-bg: linear-gradient(135deg, rgba(255,255,255,0.02), rgba(0,0,0,0.15));
+      --radius:16px;
+      --maxw:1000px;
+    }
+    html,body{height:100%;margin:0;font-family:'Inter',system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial;}
+    body{
+      color:var(--text);
+      background-color:#07060a;
+      background-image: url('https://images.unsplash.com/photo-1614064642307-29f7c3a5f3b3?auto=format&fit=crop&w=1920&q=80');
+      background-size:cover;
+      background-position:center;
+      background-attachment:fixed;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    /* dark overlay */
+    .page-wrap{
+      min-height:100vh;
+      backdrop-filter: blur(6px);
+      background: linear-gradient(180deg, rgba(2,6,23,0.55), rgba(2,6,23,0.65));
+      display:flex;
+      align-items:flex-start;
+      justify-content:center;
+      padding:48px 20px;
+      box-sizing:border-box;
+    }
+
+    .container{
+      width:100%;
+      max-width:var(--maxw);
+      margin:0 auto;
+    }
+
+    header{
+      display:flex;
+      gap:20px;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:28px;
+    }
+
+    .brand{
+      display:flex;
+      gap:16px;
+      align-items:center;
+    }
+    .logo{
+      height:64px;
+      width:64px;
+      border-radius:12px;
+      background: linear-gradient(135deg,var(--accent),var(--accent-2));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:700;
+      color:white;
+      box-shadow: 0 8px 30px rgba(139,92,246,0.18), inset 0 -6px 18px rgba(0,0,0,0.25);
+    }
+    h1{font-size:20px;margin:0}
+    .subtitle{color:var(--muted);font-size:13px;margin-top:4px}
+
+    /* main card */
+    .main-card{
+      background: var(--card-bg);
+      border-radius:var(--radius);
+      padding:26px;
+      box-shadow: 0 12px 40px rgba(2,6,23,0.6);
+      display:grid;
+      grid-template-columns: 1fr 360px;
+      gap:20px;
+      align-items:start;
+    }
+
+    /* left column */
+    .bio{
+      line-height:1.45;
+    }
+    .bio h2{
+      margin:0 0 8px 0;
+      font-size:28px;
+      letter-spacing:0.2px;
+    }
+    .bio .role{color:var(--accent);font-weight:600;margin-bottom:12px}
+    .bio .meta{color:var(--muted);font-size:14px;margin-bottom:18px}
+
+    .guarantees{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:18px;
+    }
+    .chip{
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.08));
+      padding:8px 12px;
+      border-radius:999px;
+      color:var(--text);
+      font-weight:600;
+      font-size:13px;
+      border:1px solid rgba(255,255,255,0.03);
+    }
+
+    .bio-block{
+      background:rgba(255,255,255,0.02);
+      padding:14px;
+      border-radius:12px;
+      margin-bottom:14px;
+      color:var(--muted);
+      font-size:14px;
+    }
+    .stars{color:#ffd166;font-size:16px;margin:8px 0}
+
+    /* right column */
+    .side{
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+
+    .links{
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.05));
+      padding:14px;border-radius:12px;
+    }
+    .link-row{display:flex;gap:10px;align-items:center;margin-bottom:8px}
+    .link-row a{
+      color:var(--text);
+      text-decoration:none;
+      font-weight:600;
+      background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(0,0,0,0.04));
+      padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);
+      display:inline-flex;gap:8px;align-items:center;
+    }
+    .small{font-size:13px;color:var(--muted)}
+
+    /* posts */
+    .posts{
+      margin-top:16px;
+    }
+    .post{
+      background:rgba(0,0,0,0.35);
+      padding:12px;border-radius:10px;margin-bottom:12px;border:1px solid rgba(255,255,255,0.02);
+    }
+    .post h3{margin:0;font-size:15px}
+    .post .meta{font-size:12px;color:var(--muted);margin-top:6px}
+    .post .body{margin-top:8px;color:var(--text);font-size:14px;white-space:pre-wrap}
+
+    footer{
+      margin-top:18px;color:var(--muted);font-size:13px;text-align:center;
+    }
+
+    @media (max-width:980px){
+      .main-card{grid-template-columns:1fr; padding:18px}
+      .logo{height:56px;width:56px}
+    }
+  </style>
+</head>
+<body>
+  <div class="page-wrap">
+    <div class="container">
+      <header>
+        <div class="brand">
+          <div class="logo">S</div>
+          <div>
+            <h1>Sanzen / sanzsell</h1>
+            <div class="subtitle">Продавец на FunPay • доверие и безопасность</div>
+          </div>
+        </div>
+        <div class="small">Обновлено: <span id="updatedAt">—</span></div>
+      </header>
+
+      <main class="main-card" role="main">
+        <section class="left">
+          <div class="bio">
+            <div class="role">💎💎💎💎💎💎 💎💎💎</div>
+            <h2>Я — @sanzenand</h2>
+            <div class="meta">@sanzenand на FunPay — 45 отзывов, рейтинг 5/5 💜</div>
+
+            <div class="guarantees">
+              <div class="chip">✅ Быстрые и честные сделки</div>
+              <div class="chip">⏰ Ответ в кратчайшие сроки</div>
+              <div class="chip">⚠️ Не работаю со скамом</div>
+            </div>
+
+            <div class="bio-block">
+              <strong>Описание</strong>
+              <div style="margin-top:8px;">
+                Попрошу подумать прежде чем: спамить, просить создать скам, и т.д.  
+                Данный канал создан для доверия и вашей безопасности.  
+                Ниже — заказы и отзывы; минимальная сумма от 1$.
+              </div>
+              <div class="stars" aria-hidden="true">⭐⭐⭐⭐⭐⭐⭐⭐</div>
+            </div>
+
+            <div class="bio-block">
+              <strong>Услуги на FanPay</strong>
+              <ul style="margin:8px 0 0 18px;color:var(--muted)">
+                <li>Создание Telegram ботов</li>
+                <li>Создание Discord ботов</li>
+                <li>Продажа аккаунтов в играх</li>
+              </ul>
+            </div>
+
+            <div class="bio-block">
+              <strong>Контакт и инструкции</strong>
+              <div style="margin-top:8px;color:var(--muted)">Перед покупкой ознакомьтесь с информацией выше, задавайте вопросы в телеграмм.</div>
+            </div>
+
+            <div class="posts" id="postsArea" aria-live="polite">
+              <h3 style="margin-top:6px;margin-bottom:10px">Последние посты / отзывы</h3>
+              <div id="postsList">
+                <!-- posts will be injected here -->
+                <div class="small" id="loadingPosts">Загрузка постов…</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <aside class="side" aria-label="Контакты и ссылки">
+          <div class="links" role="region" aria-labelledby="contactTitle">
+            <div id="contactTitle" style="font-weight:700;margin-bottom:8px">Контакты</div>
+
+            <div class="link-row">
+              <a href="https://t.me/Sanzenand" target="_blank" rel="noopener noreferrer">Telegram — @Sanzenand</a>
+            </div>
+            <div class="link-row">
+              <a href="https://t.me/mainsanzenand" target="_blank" rel="noopener noreferrer">БИО канал — @mainsanzenand</a>
+            </div>
+            <div class="link-row">
+              <a href="https://t.me/sanzenand_fp" target="_blank" rel="noopener noreferrer">Отзывы на FanPay — @sanzenand_fp</a>
+            </div>
+            <div class="link-row">
+              <a href="https://discord.gg/XwbxSpvC8z" target="_blank" rel="noopener noreferrer">Discord</a>
+            </div>
+            <div class="link-row">
+              <a href="https://funpay.com/lots/offer?id=44506664" target="_blank" rel="noopener noreferrer">FunPay — sanzsell</a>
+            </div>
+
+            <div style="margin-top:10px;font-size:13px;color:var(--muted)">
+              Для публикации новых постов/отзывов создавайте публичную Issue в репозитории этого сайта.
+            </div>
+          </div>
+
+          <div class="links">
+            <div style="font-weight:700;margin-bottom:8px">Публикация постов</div>
+            <div class="small" style="margin-bottom:10px">
+              Чтобы добавить пост: открой репозиторий → Issues → New issue. Заголовок — краткая тема, в описании — текст и скрины. Issue автоматически отобразится как пост.
+            </div>
+            <div style="font-weight:700;margin-bottom:6px">Безопасность</div>
+            <div class="small" style="color:var(--muted)">
+              Страница загружает только содержимое Issues и выполняет строгую очистку текста перед показом. Все операции записи делаются через GitHub (аутентификация GitHub защищает публикации).
+            </div>
+          </div>
+
+          <div style="text-align:center;color:var(--muted);font-size:13px">
+            © 2025 Sanzen • Доверие и безопасность
+          </div>
+        </aside>
+      </main>
+
+      <footer>
+        <div class="small">Репозиторий используется как CMS: публикации через Issues. Встроенные ссылки открываются в новой вкладке.</div>
+      </footer>
+    </div>
+  </div>
+
+  <script>
+    // Настройки: укажи имя своего репозитория (владельца и название)
+    // Пример: owner = "SanzenUser", repo = "sanzen-bio"
+    const owner = "YOUR_GITHUB_USERNAME";
+    const repo = "YOUR_REPO_NAME";
+
+    // Функция безопасной очистки текста: удаляет теги, только текст
+    function escapeText(s){
+      if(!s) return "";
+      return String(s)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#x27;");
+    }
+
+    // Формат даты читаемо
+    function formatDate(iso){
+      try{
+        const d = new Date(iso);
+        return d.toLocaleString("ru-RU", {year:"numeric",month:"short",day:"numeric", hour:"2-digit", minute:"2-digit"});
+      }catch(e){ return iso; }
+    }
+
+    // Получаем последние публичные issues (отображаем только открытые)
+    async function loadPosts(){
+      const postsList = document.getElementById("postsList");
+      const loading = document.getElementById("loadingPosts");
+      loading && (loading.textContent = "Загрузка постов…");
+
+      const api = `https://api.github.com/repos/${owner}/${repo}/issues?state=open&per_page=6`;
+      try{
+        const res = await fetch(api, { headers: { Accept: "application/vnd.github.v3+json" }});
+        if(!res.ok) throw new Error("GitHub API error");
+        const issues = await res.json();
+        postsList.innerHTML = "";
+        if(!issues || issues.length === 0){
+          postsList.innerHTML = '<div class="small">Пока нет записей. Создай Issue в репозитории для публикации поста.</div>';
+        } else {
+          issues.forEach(issue => {
+            // Только обычные issues (не pull requests)
+            if(issue.pull_request) return;
+            const title = escapeText(issue.title);
+            const body = escapeText(issue.body).replace(/\n{2,}/g, "\n\n");
+            const created = formatDate(issue.created_at);
+            const author = escapeText(issue.user && issue.user.login);
+            const html = `
+              <article class="post" aria-labelledby="post-${issue.number}">
+                <h3 id="post-${issue.number}">${title}</h3>
+                <div class="meta">#${issue.number} • ${created} • ${author}</div>
+                <div class="body">${body}</div>
+              </article>`;
+            postsList.insertAdjacentHTML("beforeend", html);
+          });
+        }
+        document.getElementById("updatedAt").textContent = new Date().toLocaleString();
+      }catch(err){
+        postsList.innerHTML = '<div class="small">Не удалось загрузить посты. Проверь настройки репозитория и имя владельца/репо.</div>';
+        console.error(err);
+      }
+    }
+
+    // Инициализация
+    (function(){
+      if(owner === "YOUR_GITHUB_USERNAME" || repo === "YOUR_REPO_NAME"){
+        document.getElementById("postsList").innerHTML = '<div class="small">Подключи репозиторий: замени YOUR_GITHUB_USERNAME и YOUR_REPO_NAME в коде.</div>';
+        return;
+      }
+      loadPosts();
+      // автообновление каждые 2 минуты
+      setInterval(loadPosts, 120000);
+    })();
+  </script>
+</body>
+</html>
