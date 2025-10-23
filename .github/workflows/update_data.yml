@@ -7,47 +7,67 @@ on:
 jobs:
   update:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Debug: list repo root and action folder
+      - name: Debug: show repo root and action folder
         run: |
           echo "PWD: $(pwd)"
-          echo "Root listing:"
+          echo "Repo root listing:"
           ls -la
+          echo ""
+          echo ".github listing:"
+          ls -la .github || true
+          echo ""
+          echo ".github/actions listing:"
+          ls -la .github/actions || true
+          echo ""
           echo ".github/actions/update-data listing:"
           ls -la .github/actions/update-data || true
-          echo "Check bash locations:"
-          ls -la /bin/bash || true
-          ls -la /usr/bin/bash || true
         shell: bash
 
-      - name: Setup Node.js
+      - name: Setup Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Install dependencies for scraper
-        working-directory: .github/actions/update-data
-        run: npm ci
+      - name: Install dependencies (cd then npm ci)
+        run: |
+          if [ -d ".github/actions/update-data" ]; then
+            cd .github/actions/update-data
+            echo "Running npm ci in: $(pwd)"
+            npm ci
+          else
+            echo "Directory .github/actions/update-data not found; aborting with diagnostic listing"
+            ls -la || true
+            exit 1
+          fi
         shell: bash
 
-      - name: Run scraper (create/update reviews.json and tg_posts.json)
-        working-directory: .github/actions/update-data
+      - name: Run scraper (cd then node)
         env:
           FUNPAY_USER_URL: "https://funpay.com/users/11006828/"
           TG_CHANNEL_WEB: "https://t.me/s/sanzenand_fp"
-        run: node scrape.js
+        run: |
+          cd .github/actions/update-data
+          echo "Running scraper from: $(pwd)"
+          node scrape.js
+          # ensure generated files moved to repo root if script writes to cwd
+          if [ -f reviews.json ]; then
+            mv reviews.json "$GITHUB_WORKSPACE/" || true
+          fi
+          if [ -f tg_posts.json ]; then
+            mv tg_posts.json "$GITHUB_WORKSPACE/" || true
+          fi
         shell: bash
 
-      - name: Show generated files (for debug)
+      - name: Show generated files (debug)
         run: |
-          echo "Generated files in repo root:"
-          ls -la reviews.json tg_posts.json || true
+          echo "Root listing after run:"
+          ls -la "$GITHUB_WORKSPACE" || true
           echo "reviews.json preview:"
           head -n 60 reviews.json || true
           echo "tg_posts.json preview:"
