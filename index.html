@@ -4,93 +4,34 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>BIO SANZENAND</title>
-
-  <!-- CSP минимально разрешает безопасные ресурсы -->
   <meta http-equiv="Content-Security-Policy"
     content="default-src 'self' https:; script-src 'self' 'unsafe-inline' https://telegram.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; connect-src 'self' https://api.github.com;">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
-
   <style>
     :root{
-      --maxw:980px;
-      --accent:#7c3aed;
-      --muted:#a9b6cc;
-      --card-bg: rgba(255,255,255,0.03);
-      --glass: rgba(255,255,255,0.02);
-      --radius:14px;
+      --maxw:980px; --accent:#7c3aed; --muted:#a9b6cc; --card-bg: rgba(255,255,255,0.03);
+      --glass: rgba(255,255,255,0.02); --radius:14px;
     }
     *{box-sizing:border-box}
     html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial;background:#05050a;color:#eef2ff}
-    body{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:28px;
-      background-size:cover;
-      background-position:center;
-      background-attachment:fixed;
-    }
-    .wrap{
-      width:100%;
-      max-width:var(--maxw);
-      background:linear-gradient(180deg, rgba(2,6,23,0.55), rgba(2,6,23,0.75));
-      border-radius:18px;
-      padding:22px;
-      box-shadow: 0 18px 60px rgba(2,6,23,0.7);
-      backdrop-filter: blur(6px);
-    }
+    body{display:flex;align-items:center;justify-content:center;padding:28px;background-size:cover;background-position:center;background-attachment:fixed}
+    .wrap{width:100%;max-width:var(--maxw);background:linear-gradient(180deg, rgba(2,6,23,0.55), rgba(2,6,23,0.75));border-radius:18px;padding:22px;box-shadow:0 18px 60px rgba(2,6,23,0.7);backdrop-filter: blur(6px)}
     header{display:flex;gap:16px;align-items:center}
-    .avatar{
-      width:96px;height:96px;border-radius:16px;flex-shrink:0;
-      background:linear-gradient(135deg,var(--accent),#ff4d6d);
-      display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:28px;
-      overflow:hidden;border:1px solid rgba(255,255,255,0.04);
-    }
-    .avatar img{width:100%;height:100%;object-fit:cover;display:block}
+    .avatar{width:96px;height:96px;border-radius:16px;flex-shrink:0;background:linear-gradient(135deg,var(--accent),#ff4d6d);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:28px;overflow:hidden;border:1px solid rgba(255,255,255,0.04)}
+    .avatar img, .avatar video{width:100%;height:100%;object-fit:cover;display:block}
     .title{flex:1}
     h1{margin:0;font-size:20px;letter-spacing:0.4px}
     .subtitle{color:var(--muted);font-size:13px;margin-top:6px}
-
-    .bio-card{
-      margin-top:18px;
-      padding:18px;border-radius:12px;background:var(--card-bg);border:1px solid rgba(255,255,255,0.03)
-    }
-
-    /* typing animation */
-    .typing {
-      font-family: 'Inter', system-ui, Arial;
-      color:#f7fbff;
-      font-weight:600;
-      font-size:18px;
-      min-height:28px;
-      white-space:pre-wrap;
-      overflow:hidden;
-    }
-    .cursor{
-      display:inline-block;
-      width:10px;
-      height:22px;
-      background:var(--accent);
-      margin-left:6px;
-      vertical-align:middle;
-      animation: blink 1s step-start infinite;
-      border-radius:3px;
-    }
-    @keyframes blink { 50% { opacity: 0 } }
-
+    .bio-card{margin-top:18px;padding:18px;border-radius:12px;background:var(--card-bg);border:1px solid rgba(255,255,255,0.03)}
+    .typing{font-family:'Inter',system-ui,Arial;color:#f7fbff;font-weight:600;font-size:18px;min-height:28px;white-space:pre-wrap;overflow:hidden}
+    .cursor{display:inline-block;width:10px;height:22px;background:var(--accent);margin-left:6px;vertical-align:middle;animation:blink 1s step-start infinite;border-radius:3px}
+    @keyframes blink{50%{opacity:0}}
     .cols{display:grid;grid-template-columns:1fr 340px;gap:16px;margin-top:14px}
-    @media(max-width:920px){ .cols{grid-template-columns:1fr} .avatar{width:80px;height:80px} }
-
-    .side{
-      background:var(--glass);padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.02)
-    }
+    @media(max-width:920px){.cols{grid-template-columns:1fr}.avatar{width:80px;height:80px}}
+    .side{background:var(--glass);padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.02)}
     .links a{display:block;color:#fff;text-decoration:none;padding:8px;border-radius:8px;margin-bottom:8px;background:linear-gradient(90deg,rgba(255,255,255,0.02),rgba(0,0,0,0.03));border:1px solid rgba(255,255,255,0.02)}
     .muted{color:var(--muted);font-size:13px}
-
-    .controls{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
-    .ctrl{background:rgba(255,255,255,0.02);padding:8px;border-radius:10px;border:1px solid rgba(255,255,255,0.02);font-size:13px;color:var(--muted)}
     .note{margin-top:12px;color:var(--muted);font-size:13px}
-
     footer{margin-top:18px;text-align:center;color:var(--muted);font-size:13px}
   </style>
 </head>
@@ -102,7 +43,7 @@
       </div>
       <div class="title">
         <h1>BIO SANZENAND</h1>
-        <div class="subtitle">@sanzenand — продавец, разработчик ботов и сервисов</div>
+        <div class="subtitle">@sanzenand — продавец и разработчик ботов</div>
       </div>
       <div class="muted" id="timeNow"></div>
     </header>
@@ -114,16 +55,12 @@
         <div>
           <div style="margin-top:12px;color:#dfe9ff">
             <strong>О себе</strong>
-            <p class="muted" style="margin-top:8px">
-              Я — @sanzenand. Предоставляю услуги: создание Telegram и Discord ботов, продажа аккаунтов в играх и другие цифровые сервисы.
-            </p>
+            <p class="muted" style="margin-top:8px">Я — @sanzenand. Предоставляю услуги: создание Telegram и Discord ботов, продажа аккаунтов в играх и другие цифровые сервисы.</p>
           </div>
 
           <div style="margin-top:12px">
             <strong>Гарантии</strong>
-            <p class="muted" style="margin-top:8px">
-              Быстрые и честные сделки. Работаю с проверенными методами, не участвую в скамах и не создаю мошеннических ботов.
-            </p>
+            <p class="muted" style="margin-top:8px">Быстрые и честные сделки. Работаю с проверенными методами, не участвую в скамах и не создаю мошеннических ботов.</p>
           </div>
         </div>
 
@@ -137,19 +74,6 @@
               <a href="https://funpay.com/users/11006828/" target="_blank" rel="noopener noreferrer">FunPay — Sanzenand</a>
             </div>
           </div>
-
-          <div style="margin-top:12px">
-            <div style="font-weight:700;margin-bottom:8px">Параметры через URL</div>
-            <div class="muted">Добавь в адресную строку параметры <code>?bg=</code>, <code>&avatar=</code>, <code>&music=</code></div>
-
-            <div class="controls" style="margin-top:10px">
-              <div class="ctrl" id="showBg">Фон: https://pin.it/15spfBlUj <span id="bgVal">default</span></div>
-              <div class="ctrl" id="showAvatar">Ава: <span id="avatarVal">default</span></div>
-              <div class="ctrl" id="showMusic">Музыка: <span id="musicVal">off</span></div>
-            </div>
-
-            <div class="note">URL параметры: <code>?bg=https://example.com/bg.jpg&avatar=https://example.com/a.jpg&music=https://example.com/t.mp3</code></div>
-          </div>
         </aside>
       </div>
     </div>
@@ -157,87 +81,70 @@
     <footer>© 2025 sanzenand</footer>
   </div>
 
-  <!-- Audio element (hidden controls optional) -->
   <audio id="bgAudio" loop crossorigin="anonymous"></audio>
 
   <script>
-    // ====== Utility ======
+    // Defaults provided by user
+    const DEFAULT_BG = "https://pin.it/15spfBlUj";
+    const DEFAULT_AVATAR_VIDEO = "https://pin.it/2rN62A9RO";
+    const DEFAULT_MUSIC = "./Dasing.mp3"; // local file in repo root expected
+
     function qsParam(name){
-      try {
-        const params = new URLSearchParams(window.location.search);
-        return params.get(name);
-      } catch { return null; }
+      try{ const params = new URLSearchParams(window.location.search); return params.get(name); } catch { return null; }
     }
     function setBodyBg(url){
       if(!url) return;
-      // basic sanitation: allow only https
-      if(/^https?:\/\//i.test(url)){
-        document.body.style.backgroundImage = `url('${url}')`;
-        document.getElementById('bgVal').textContent = 'custom';
-      }
+      document.body.style.backgroundImage = `url('${url}')`;
     }
-    function setAvatar(url){
+    function setAvatarVideo(url){
       const av = document.getElementById('avatar');
-      const initial = document.getElementById('avatarInitial');
-      if(url && /^https?:\/\//i.test(url)){
+      av.innerHTML = '';
+      if(!url) { av.innerHTML = '<span id="avatarInitial">S</span>'; return; }
+      const lower = url.toLowerCase();
+      if(lower.endsWith('.mp4') || lower.endsWith('.webm') || lower.endsWith('.ogg')){
+        const v = document.createElement('video');
+        v.src = url;
+        v.autoplay = true;
+        v.loop = true;
+        v.muted = true;
+        v.playsInline = true;
+        v.style.width = '100%';
+        v.style.height = '100%';
+        av.appendChild(v);
+      } else {
         const img = document.createElement('img');
         img.src = url;
         img.alt = 'avatar';
-        img.onload = ()=> { initial.style.display='none'; };
-        img.onerror = ()=> { img.remove(); };
-        // clear existing
-        av.innerHTML = '';
+        img.onerror = ()=>{ img.remove(); av.innerHTML = '<span id="avatarInitial">S</span>'; };
         av.appendChild(img);
-        document.getElementById('avatarVal').textContent = 'custom';
-      } else {
-        // default initial S
-        av.innerHTML = '<span id="avatarInitial">S</span>';
-        document.getElementById('avatarVal').textContent = 'default';
       }
     }
     function setMusic(url){
       const audio = document.getElementById('bgAudio');
-      const musicVal = document.getElementById('musicVal');
-      if(url && /^https?:\/\//i.test(url)){
-        audio.src = url;
-        audio.volume = 0.25;
-        audio.play().catch(()=>{/* user gesture may block autoplay */});
-        musicVal.textContent = 'on';
-      } else {
-        audio.pause();
-        audio.removeAttribute('src');
-        musicVal.textContent = 'off';
-      }
+      if(!url){ audio.pause(); audio.removeAttribute('src'); return; }
+      audio.src = url;
+      audio.volume = 0.25;
+      audio.play().catch(()=>{/* autoplay may be blocked */});
     }
 
-    // ====== Typing loop (type & delete forever) ======
+    // Typing animation content
     const lines = [
-      "💎 Я — @sanzenand: продавец и разработчик ботов.",
-      "💼 На FunPay: продавец sanzenand; предоставляю услуги по созданию ботов, продаже аккаунтов и поддержке.",
-      "✅ Быстрые и честные сделки. Отвечаю в кратчайшие сроки.",
-      "⚠️ Не участвую в скамах, не создаю скам-ботов. Этот канал для доверия и безопасности."
+      "Я — @sanzenand: продавец и разработчик ботов.",
+      "На FunPay: продавец sanzsell; предоставляю услуги по созданию ботов, продаже аккаунтов и поддержке.",
+      "Быстрые и честные сделки. Отвечаю в кратчайшие сроки.",
+      "Не участвую в скаме; этот канал для доверия и безопасности."
     ];
 
     const typingArea = document.getElementById('typingArea');
-    const cursor = document.getElementById('cursor');
-
     async function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
-
-    async function typeText(text, speed=40){
+    async function typeText(text,speed=40){
       typingArea.textContent = '';
-      for(let i=0;i<text.length;i++){
-        typingArea.textContent += text[i];
-        await sleep(speed + Math.random()*30);
-      }
+      for(let i=0;i<text.length;i++){ typingArea.textContent += text[i]; await sleep(speed + Math.random()*30); }
     }
     async function deleteText(speed=30){
       const txt = typingArea.textContent;
-      for(let i=txt.length;i>0;i--){
-        typingArea.textContent = txt.slice(0,i-1);
-        await sleep(speed);
-      }
+      for(let i=txt.length;i>0;i--){ typingArea.textContent = txt.slice(0,i-1); await sleep(speed); }
     }
-
     async function typingLoop(){
       let i=0;
       while(true){
@@ -250,50 +157,20 @@
       }
     }
 
-    // ====== Init and read URL params ======
     (function init(){
-      // display current time
       document.getElementById('timeNow').textContent = new Date().toLocaleString();
 
-      // read URL params
-      const bg = qsParam('bg');
-      const avatar = qsParam('avatar');
-      const music = qsParam('music');
+      // apply defaults; URL params still supported but no UI shown
+      const bgParam = qsParam('bg') || DEFAULT_BG;
+      const avatarParam = qsParam('avatar') || DEFAULT_AVATAR_VIDEO;
+      const musicParam = qsParam('music') || DEFAULT_MUSIC;
 
-      if(bg) setBodyBg(bg);
-      if(avatar) setAvatar(avatar);
-      if(music) setMusic(music);
+      setBodyBg(bgParam);
+      setAvatarVideo(avatarParam);
+      setMusic(musicParam);
 
-      // show values
-      document.getElementById('showBg').addEventListener('click', ()=> {
-        const u = prompt('Введите URL фона (https...):', bg || '');
-        if(u) { setBodyBg(u); window.history.replaceState({}, '', updateQueryStringParameter(window.location.href,'bg',u)); }
-      });
-      document.getElementById('showAvatar').addEventListener('click', ()=> {
-        const u = prompt('Введите URL аватарки (https...):', avatar || '');
-        if(u) { setAvatar(u); window.history.replaceState({}, '', updateQueryStringParameter(window.location.href,'avatar',u)); }
-      });
-      document.getElementById('showMusic').addEventListener('click', ()=> {
-        const u = prompt('Введите URL музыки (https...):', music || '');
-        if(u){ setMusic(u); window.history.replaceState({}, '', updateQueryStringParameter(window.location.href,'music',u)); }
-        else { setMusic(null); }
-      });
-
-      typingLoop().catch(()=>{ /* ignore */ });
+      typingLoop().catch(()=>{});
     })();
-
-    // helper to update query string
-    function updateQueryStringParameter(uri, key, value) {
-      if(!value) {
-        // remove key
-        const url = new URL(uri);
-        url.searchParams.delete(key);
-        return url.toString();
-      }
-      const url = new URL(uri);
-      url.searchParams.set(key, value);
-      return url.toString();
-    }
   </script>
 </body>
 </html>
