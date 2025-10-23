@@ -1,8 +1,8 @@
 name: Update FunPay reviews and TG posts
 on:
   schedule:
-    - cron: '0 */6 * * *'   # каждые 6 часов
-  workflow_dispatch:        # возможность запустить вручную
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
 
 jobs:
   update:
@@ -10,23 +10,22 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
       - name: Install dependencies
+        working-directory: .github/actions/update-data
         run: npm ci
-        working-directory: .github/actions/update-data || .
 
       - name: Run scraper
+        working-directory: .github/actions/update-data
         env:
           FUNPAY_USER_URL: "https://funpay.com/users/11006828/"
           TG_CHANNEL_URL: "https://t.me/sanzenand_fp"
-        run: node .github/actions/update-data/scrape.js
+        run: node scrape.js
 
       - name: Commit data
         run: |
