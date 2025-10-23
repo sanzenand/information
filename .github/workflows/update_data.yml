@@ -1,8 +1,8 @@
 name: Update FunPay reviews and TG posts
 on:
   schedule:
-    - cron: '0 */6 * * *'   # каждые 6 часов
-  workflow_dispatch:        # запуск вручную
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
 
 jobs:
   update:
