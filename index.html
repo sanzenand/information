@@ -17,8 +17,6 @@
       --card-bg: rgba(255,255,255,0.03);
       --glass: rgba(255,255,255,0.02);
       --radius:14px;
-      --star-on: #ffd166;
-      --star-off: #404655;
     }
     *{box-sizing:border-box}
     html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial;background:#05050a;color:#eef2ff}
@@ -31,7 +29,7 @@
     h1{margin:0;font-size:20px;letter-spacing:0.4px}
     .subtitle{color:var(--muted);font-size:13px;margin-top:6px}
     .bio-card{margin-top:18px;padding:18px;border-radius:12px;background:var(--card-bg);border:1px solid rgba(255,255,255,0.03)}
-    .typing{font-family:'Inter',system-ui,Arial;color:#f7fbff;font-weight:600;font-size:18px;min-height:84px;white-space:pre-wrap;overflow:hidden}
+    .typing{font-family:'Inter',system-ui,Arial;color:#f7fbff;font-weight:600;font-size:18px;min-height:28px;white-space:pre-wrap;overflow:hidden}
     .cursor{display:inline-block;width:10px;height:22px;background:var(--accent);margin-left:6px;vertical-align:middle;animation:blink 1s step-start infinite;border-radius:3px}
     @keyframes blink{50%{opacity:0}}
     .cols{display:grid;grid-template-columns:1fr 340px;gap:16px;margin-top:14px}
@@ -42,33 +40,47 @@
     .note{margin-top:12px;color:var(--muted);font-size:13px}
     footer{margin-top:18px;text-align:center;color:var(--muted);font-size:13px}
 
-    /* rating UI */
-    .rating {display:flex;gap:6px;align-items:center}
-    .star{width:28px;height:28px;display:inline-block;cursor:pointer;filter:drop-shadow(0 4px 10px rgba(0,0,0,0.5));background:transparent;border:0}
-    .comment-area{margin-top:8px}
-    textarea{width:100%;min-height:80px;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:rgba(0,0,0,0.35);color:#fff;resize:vertical}
-    .btn{display:inline-block;padding:8px 12px;border-radius:8px;background:var(--accent);color:#fff;border:none;cursor:pointer;margin-top:8px}
-    .btn.secondary{background:transparent;border:1px solid rgba(255,255,255,0.06)}
-    .reviews{margin-top:12px}
-    .rev{padding:10px;border-radius:8px;background:rgba(0,0,0,0.28);margin-bottom:10px;border:1px solid rgba(255,255,255,0.02)}
-    .rev .meta{font-size:13px;color:var(--muted);margin-bottom:6px}
-    .uploader{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-    input[type=file]{display:none}
-    .file-label{display:inline-block;padding:8px;border-radius:8px;background:rgba(255,255,255,0.02);cursor:pointer;border:1px solid rgba(255,255,255,0.03)}
-    .toggle-group{display:flex;gap:8px;margin-top:8px}
-    .toggle{padding:6px 10px;border-radius:8px;background:rgba(255,255,255,0.02);cursor:pointer;color:var(--muted);border:1px solid rgba(255,255,255,0.03)}
-    .bg-video{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);min-width:100%;min-height:100%;width:auto;height:auto;z-index:-2;object-fit:cover}
+    /* audio toggle button */
+    #audioToggle {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      z-index: 9999;
+      display: none;
+      box-shadow: 0 6px 20px rgba(124,58,237,0.25);
+    }
+
+    /* ensure video background under content */
+    .bg-video {
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%,-50%);
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      z-index: -2;
+      object-fit: cover;
+    }
   </style>
 </head>
 <body>
   <div class="wrap" role="main" aria-label="BIO Sanzenand">
     <header>
-      <div class="avatar" id="avatar"><span id="avatarInitial">S</span></div>
+      <div class="avatar" id="avatar">
+        <span id="avatarInitial">S</span>
+      </div>
       <div class="title">
         <h1>BIO SANZENAND</h1>
         <div class="subtitle">@sanzenand — продавец и разработчик ботов</div>
       </div>
-      <div class="muted" id="timeNow"></div>
     </header>
 
     <div class="bio-card">
@@ -78,37 +90,17 @@
         <div>
           <div style="margin-top:12px;color:#dfe9ff">
             <strong>О себе</strong>
-            <p class="muted" style="margin-top:8px">Я — @sanzenand. Предоставляю услуги: создание Telegram и Discord ботов, продажа прокси и других цифровых сервисов.</p>
+            <p class="muted" style="margin-top:8px">Я — @sanzenand, известен на платформе FunPay как продавец. На данный момент имею рейтинг 5/5.</p>
           </div>
 
           <div style="margin-top:12px">
             <strong>Гарантии</strong>
-            <p class="muted" style="margin-top:8px">Быстрые и Честные сделки. Отвечаю и выполняю заказы в кратчайшие сроки.</p>
+            <p class="muted" style="margin-top:8px">Гарантирую вам: Быстрые и Честные сделки. Отвечаю и выполняю заказы в кратчайшие сроки.</p>
           </div>
 
-          <div style="margin-top:14px">
-            <strong>Оставить отзыв / комментарий</strong>
-            <div class="note">Выберите оценку (0–5) и напишите комментарий. Отметьте, является ли запись отзывом или просто комментарием. Данные сохраняются в вашем браузере (localStorage).</div>
-
-            <div style="margin-top:8px">
-              <div class="rating" id="ratingControl" aria-label="Рейтинг"></div>
-
-              <div class="comment-area">
-                <textarea id="commentText" placeholder="Ваш комментарий (необязательно)"></textarea>
-
-                <div class="toggle-group" role="radiogroup" aria-label="Тип записи">
-                  <button class="toggle" id="markReview" aria-pressed="true">Отзыв</button>
-                  <button class="toggle" id="markNotReview" aria-pressed="false">Не отзыв</button>
-                </div>
-
-                <div>
-                  <button class="btn" id="submitReview">Отправить</button>
-                  <button class="btn secondary" id="clearAll">Очистить все отзывы</button>
-                </div>
-              </div>
-            </div>
-
-            <div class="reviews" id="reviewsList" aria-live="polite"></div>
+          <div style="margin-top:12px">
+            <strong>Важно</strong>
+            <p class="muted" style="margin-top:8px">Попрошу вас подумать прежде чем: Спамить. Просить создать скам чего то, не имею отношения к скам-ботам⚠️</p>
           </div>
         </div>
 
@@ -120,28 +112,7 @@
               <a href="https://t.me/mainsanzenand" target="_blank" rel="noopener noreferrer">БИО канал — @mainsanzenand</a>
               <a href="https://t.me/sanzenand_fp" target="_blank" rel="noopener noreferrer">Отзывы канал — @sanzenand_fp</a>
               <a href="https://t.me/newssanz" target="_blank" rel="noopener noreferrer">Игровой канал — @newssanz</a>
-            </div>
-
-            <div style="margin-top:12px">
-              <div style="font-weight:700;margin-bottom:8px">Фон / Аватар / Музыка</div>
-              <div class="muted">Если фон из репозитория не применяется автоматически, можете загрузить файлы прямо в браузере — они применятся локально и не будут коммичены.</div>
-
-              <div class="uploader" aria-hidden="false">
-                <label class="file-label" title="Загрузить фон">
-                  Загрузить фон
-                  <input type="file" id="uploadBg" accept="image/*,video/*">
-                </label>
-                <label class="file-label" title="Загрузить аватар">
-                  Загрузить аватар
-                  <input type="file" id="uploadAvatar" accept="image/*,video/*">
-                </label>
-                <label class="file-label" title="Загрузить музыку">
-                  Загрузить музыку
-                  <input type="file" id="uploadMusic" accept="audio/*">
-                </label>
-              </div>
-
-              <div class="note" style="margin-top:10px">Репо: можно положить файлы в корень с именами background.mp4|background.jpg, avatar.mp4|avatar.jpg, Dasing.mp3 — сайт попытается их применить.</div>
+              <a href="https://funpay.com/users/11006828/" target="_blank" rel="noopener noreferrer">FunPay — Sanzenand</a>
             </div>
           </div>
         </aside>
@@ -152,216 +123,152 @@
   </div>
 
   <audio id="bgAudio" loop crossorigin="anonymous" preload="none"></audio>
-  <button id="audioToggle" style="position:fixed;right:16px;bottom:16px;padding:8px 12px;border-radius:8px;background:var(--accent);color:#fff;border:none;cursor:pointer;z-index:9999;display:none">Play</button>
+  <button id="audioToggle" aria-pressed="false">Play</button>
 
   <script>
-    // ---------- Text content requested by user ----------
-    const mainText = `Я —@sanzenand, известен на платформе FunPay как продавец
+    // Local filenames expected in repo root
+    const LOCAL_BG_VIDEO = 'background.mp4';
+    const LOCAL_BG_IMAGE = 'background.jpg';
+    const LOCAL_AVATAR_VIDEO = 'avatar.mp4';
+    const LOCAL_AVATAR_IMAGE = 'avatar.jpg';
+    const LOCAL_MUSIC = 'Dasing.mp3';
 
-На данный момент имею рейтинг 5/5
+    // Typing lines
+    const lines = [
+      "Я — @sanzenand, известен на FunPay как продавец",
+      "Рейтинг 5/5 — гарантия качества и честных сделок",
+      "Быстро отвечаю и выполняю заказы в кратчайшие сроки",
+      "Не участвую в скаме — только честные сделки и качественные боты"
+    ];
 
-Гарантирую вам:
-
-Быстрые и Честные сделки
-
-Отвечаю и выполняю заказы  в кратчайшие сроки
-
-Попрошу вас подумать прежде чем:
-
-Спамить.
-Просить создать скам чего то, не имею отношения к скам-ботам⚠️`;
-
-    // ---------- filenames to check in repo root ----------
-    const REPO_BG_VIDEO = 'background.mp4';
-    const REPO_BG_IMAGE = 'background.jpg';
-    const REPO_AVATAR_VIDEO = 'avatar.mp4';
-    const REPO_AVATAR_IMAGE = 'avatar.jpg';
-    const REPO_MUSIC = 'Dasing.mp3';
-
-    // ---------- helpers ----------
+    // Utility
     function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
     async function urlExists(path){
       try{
         const res = await fetch(path, { method: 'HEAD' });
-        return res && res.ok;
-      }catch(e){ return false; }
-    }
-    function readFileAsURL(file){ return new Promise((res, rej)=>{ const fr=new FileReader(); fr.onload = ()=>res(fr.result); fr.onerror = rej; fr.readAsDataURL(file); }); }
-    function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-
-    // ---------- background/avatar/music application ----------
-    function addBgVideo(src){
-      const existing = document.querySelector('.bg-video');
-      if(existing) existing.remove();
-      const vid = document.createElement('video');
-      vid.src = src; vid.autoplay = true; vid.loop = true; vid.muted = true; vid.playsInline = true;
-      vid.className = 'bg-video'; vid.setAttribute('aria-hidden','true');
-      document.body.prepend(vid);
-    }
-    function setBgImage(src){
-      document.body.style.backgroundImage = `url('${src}')`;
-    }
-    function setAvatarVideo(src){
-      const av = document.getElementById('avatar'); av.innerHTML='';
-      const v = document.createElement('video'); v.src=src; v.autoplay=true; v.loop=true; v.muted=true; v.playsInline=true;
-      v.style.width='100%'; v.style.height='100%'; v.style.objectFit='cover'; av.appendChild(v);
-    }
-    function setAvatarImage(src){
-      const av = document.getElementById('avatar'); av.innerHTML='';
-      const img = document.createElement('img'); img.src=src; img.alt='avatar'; img.style.width='100%'; img.style.height='100%'; img.style.objectFit='cover';
-      av.appendChild(img);
-    }
-    function setMusicSrc(src){
-      const audio = document.getElementById('bgAudio'); audio.src = src; audio.volume = 0.25;
-      const btn = document.getElementById('audioToggle'); btn.style.display = 'block'; btn.textContent = 'Play';
+        return res.ok;
+      }catch(e){
+        return false;
+      }
     }
 
-    async function applyRepoMedia(){
-      // Background: prefer video then image
-      if(await urlExists(REPO_BG_VIDEO)){ addBgVideo(REPO_BG_VIDEO); } 
-      else if(await urlExists(REPO_BG_IMAGE)){ setBgImage(REPO_BG_IMAGE); }
-      // Avatar
-      if(await urlExists(REPO_AVATAR_VIDEO)){ setAvatarVideo(REPO_AVATAR_VIDEO); }
-      else if(await urlExists(REPO_AVATAR_IMAGE)){ setAvatarImage(REPO_AVATAR_IMAGE); }
-      // Music
-      if(await urlExists(REPO_MUSIC)){ setMusicSrc(REPO_MUSIC); }
+    // Apply background: prefer video, then image
+    async function applyBackground(){
+      const body = document.body;
+      if(await urlExists(LOCAL_BG_VIDEO)){
+        const vid = document.createElement('video');
+        vid.src = LOCAL_BG_VIDEO;
+        vid.autoplay = true;
+        vid.loop = true;
+        vid.muted = true;
+        vid.playsInline = true;
+        vid.className = 'bg-video';
+        vid.setAttribute('aria-hidden','true');
+        document.body.prepend(vid);
+        console.info('Background video used:', LOCAL_BG_VIDEO);
+        return;
+      }
+      if(await urlExists(LOCAL_BG_IMAGE)){
+        body.style.backgroundImage = `url('${LOCAL_BG_IMAGE}')`;
+        console.info('Background image used:', LOCAL_BG_IMAGE);
+        return;
+      }
+      console.info('No local background found; using default CSS background.');
     }
 
-    // ---------- File upload handlers ----------
-    document.getElementById('uploadBg').addEventListener('change', async (e)=>{
-      const f = e.target.files[0]; if(!f) return;
-      const url = await readFileAsURL(f);
-      if(f.type.startsWith('video/')) addBgVideo(url); else setBgImage(url);
-    });
-    document.getElementById('uploadAvatar').addEventListener('change', async (e)=>{
-      const f = e.target.files[0]; if(!f) return;
-      const url = await readFileAsURL(f);
-      if(f.type.startsWith('video/')) setAvatarVideo(url); else setAvatarImage(url);
-    });
-    document.getElementById('uploadMusic').addEventListener('change', async (e)=>{
-      const f = e.target.files[0]; if(!f) return;
-      const url = await readFileAsURL(f);
-      setMusicSrc(url);
-    });
+    // Apply avatar: prefer video, then image, else initial
+    async function applyAvatar(){
+      const av = document.getElementById('avatar');
+      av.innerHTML = '';
+      if(await urlExists(LOCAL_AVATAR_VIDEO)){
+        const v = document.createElement('video');
+        v.src = LOCAL_AVATAR_VIDEO;
+        v.autoplay = true;
+        v.loop = true;
+        v.muted = true;
+        v.playsInline = true;
+        v.style.width = '100%';
+        v.style.height = '100%';
+        v.style.objectFit = 'cover';
+        av.appendChild(v);
+        console.info('Avatar video used:', LOCAL_AVATAR_VIDEO);
+        return;
+      }
+      if(await urlExists(LOCAL_AVATAR_IMAGE)){
+        const img = document.createElement('img');
+        img.src = LOCAL_AVATAR_IMAGE;
+        img.alt = 'avatar';
+        img.style.width = '100%';
+        img.style.height = '100%';
+        img.style.objectFit = 'cover';
+        av.appendChild(img);
+        console.info('Avatar image used:', LOCAL_AVATAR_IMAGE);
+        return;
+      }
+      av.innerHTML = '<span id="avatarInitial">S</span>';
+      console.info('No local avatar found; using initial.');
+    }
 
-    // ---------- Audio control ----------
-    const audio = document.getElementById('bgAudio');
-    const audioBtn = document.getElementById('audioToggle');
-    audioBtn.addEventListener('click', async ()=>{
-      try{
-        if(audio.paused){ await audio.play(); audioBtn.textContent='Pause'; audioBtn.setAttribute('aria-pressed','true'); }
-        else { audio.pause(); audioBtn.textContent='Play'; audioBtn.setAttribute('aria-pressed','false'); }
-      }catch(e){ console.warn('Audio play error', e); }
-    });
-    audio.addEventListener('play', ()=> audioBtn.textContent = 'Pause');
-    audio.addEventListener('pause', ()=> audioBtn.textContent = 'Play');
+    // Apply music: show play button if available
+    async function applyMusic(){
+      const audio = document.getElementById('bgAudio');
+      const btn = document.getElementById('audioToggle');
+      if(await urlExists(LOCAL_MUSIC)){
+        audio.src = LOCAL_MUSIC;
+        audio.volume = 0.25;
+        btn.style.display = 'block';
+        btn.textContent = 'Play';
+        btn.onclick = async () => {
+          if(audio.paused){
+            try { await audio.play(); btn.textContent = 'Pause'; btn.setAttribute('aria-pressed','true'); }
+            catch(e){ console.warn('Autoplay blocked or failed:', e); }
+          } else {
+            audio.pause(); btn.textContent = 'Play'; btn.setAttribute('aria-pressed','false');
+          }
+        };
+        console.info('Local music available:', LOCAL_MUSIC);
+        return;
+      }
+      btn.style.display = 'none';
+      console.info('No local music found.');
+    }
 
-    // ---------- Typing block (shows provided text, single render) ----------
+    // Typing animation loop (type then delete)
     const typingArea = document.getElementById('typingArea');
-    async function typeBlock(text, speed=18){
+    async function typeText(text, speed=40){
       typingArea.textContent = '';
-      const lines = text.split('\n');
-      for(let i=0;i<lines.length;i++){
-        const line = lines[i];
-        for(let j=0;j<line.length;j++){
-          typingArea.textContent += line[j];
-          await sleep(speed + Math.random()*8);
-        }
-        if(i < lines.length - 1) typingArea.textContent += '\n';
-        await sleep(120);
+      for(let i=0;i<text.length;i++){
+        typingArea.textContent += text[i];
+        await sleep(speed + Math.random()*30);
+      }
+    }
+    async function deleteText(speed=30){
+      let txt = typingArea.textContent;
+      while(txt.length){
+        txt = txt.slice(0,-1);
+        typingArea.textContent = txt;
+        await sleep(speed);
+      }
+    }
+    async function typingLoop(){
+      let i = 0;
+      while(true){
+        const line = lines[i % lines.length];
+        await typeText(line);
+        await sleep(1400 + Math.random()*800);
+        await deleteText();
+        await sleep(400);
+        i++;
       }
     }
 
-    // ---------- Rating & reviews (localStorage) ----------
-    const MAX = 5;
-    const ratingControl = document.getElementById('ratingControl');
-    let currentRating = 0;
-    function createStarSVG(fill){
-      return `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="${fill}" d="M12 .587l3.668 7.431L24 9.748l-6 5.851L19.335 24 12 20.202 4.665 24 6 15.599 0 9.748l8.332-1.73z"/></svg>`;
-    }
-    function renderStars(rating){
-      ratingControl.innerHTML = '';
-      for(let i=1;i<=MAX;i++){
-        const btn = document.createElement('button');
-        btn.className = 'star';
-        btn.setAttribute('aria-label', `${i} star`);
-        const fill = i <= rating ? 'var(--star-on)' : 'var(--star-off)';
-        btn.innerHTML = createStarSVG(fill);
-        btn.onclick = ()=>{ currentRating = i; renderStars(currentRating); };
-        btn.onmouseenter = ()=> renderStars(i);
-        btn.onmouseleave = ()=> renderStars(currentRating);
-        ratingControl.appendChild(btn);
-      }
-    }
-
-    function loadReviews(){ try{ const raw = localStorage.getItem('sanzen_reviews'); return raw ? JSON.parse(raw) : []; }catch(e){ return []; } }
-    function saveReviews(arr){ localStorage.setItem('sanzen_reviews', JSON.stringify(arr)); }
-    function renderReviewsList(){
-      const list = document.getElementById('reviewsList'); list.innerHTML = '';
-      const arr = loadReviews();
-      if(arr.length === 0){ list.innerHTML = '<div class="muted">Отзывы ещё не оставлены.</div>'; return; }
-      arr.slice().reverse().forEach(r=>{
-        const el = document.createElement('div'); el.className='rev';
-        const stars = '★'.repeat(r.rating) + '☆'.repeat(MAX - r.rating);
-        const kind = r.kind === 'review' ? 'Отзыв' : 'Комментарий';
-        el.innerHTML = `<div class="meta">${escapeHtml(kind)} • ${stars} • <span style="color:var(--muted)">${escapeHtml(r.time)}</span></div><div>${escapeHtml(r.text)}</div>`;
-        list.appendChild(el);
-      });
-    }
-
-    document.getElementById('submitReview').addEventListener('click', ()=>{
-      const txt = document.getElementById('commentText').value.trim();
-      const kind = document.getElementById('markReview').getAttribute('aria-pressed') === 'true' ? 'review' : 'not_review';
-      const rating = currentRating;
-      if(rating === 0 && txt === ''){ alert('Выберите оценку или введите комментарий'); return; }
-      const arr = loadReviews();
-      arr.push({ rating, text: txt, kind: kind === 'review' ? 'review' : 'not_review', time: new Date().toLocaleString() });
-      saveReviews(arr);
-      document.getElementById('commentText').value = '';
-      currentRating = 0; renderStars(0);
-      renderReviewsList();
-    });
-
-    document.getElementById('clearAll').addEventListener('click', ()=>{
-      if(confirm('Удалить все локальные отзывы?')){ localStorage.removeItem('sanzen_reviews'); renderReviewsList(); }
-    });
-
-    // Toggle buttons for Review / Not review
-    document.getElementById('markReview').addEventListener('click', ()=>{
-      document.getElementById('markReview').setAttribute('aria-pressed','true');
-      document.getElementById('markNotReview').setAttribute('aria-pressed','false');
-      document.getElementById('markReview').style.background = 'rgba(124,58,237,0.9)';
-      document.getElementById('markNotReview').style.background = '';
-    });
-    document.getElementById('markNotReview').addEventListener('click', ()=>{
-      document.getElementById('markReview').setAttribute('aria-pressed','false');
-      document.getElementById('markNotReview').setAttribute('aria-pressed','true');
-      document.getElementById('markNotReview').style.background = 'rgba(124,58,237,0.9)';
-      document.getElementById('markReview').style.background = '';
-    });
-
-    // ---------- Initialization ----------
+    // Init
     (async function init(){
-      document.getElementById('timeNow').textContent = new Date().toLocaleString();
-
-      // apply repo media if available
-      try{ await applyRepoMedia(); }catch(e){ console.warn('applyRepoMedia error', e); }
-
-      // if repo music set, show play button
-      const audioEl = document.getElementById('bgAudio');
-      if(audioEl.src) document.getElementById('audioToggle').style.display = 'block';
-
-      // typing text
-      await typeBlock(mainText);
-
-      // rating and reviews init
-      renderStars(0);
-      renderReviewsList();
-
-      // set default toggle visuals
-      document.getElementById('markReview').style.background = 'rgba(124,58,237,0.9)';
+      await applyBackground();
+      await applyAvatar();
+      await applyMusic();
+      typingLoop().catch(()=>{});
     })();
   </script>
 </body>
 </html>
-```
