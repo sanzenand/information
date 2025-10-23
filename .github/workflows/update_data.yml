@@ -8,8 +8,20 @@ jobs:
   update:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Debug listing root and action folder
+        run: |
+          echo "PWD: $(pwd)"
+          echo "Listing repo root:"
+          ls -la
+          echo "Listing .github/actions/update-data:"
+          ls -la .github/actions/update-data || true
+          echo "Check bash locations:"
+          ls -la /bin/bash || true
+          ls -la /usr/bin/bash || true
+        shell: bash
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -19,6 +31,7 @@ jobs:
       - name: Install dependencies
         working-directory: .github/actions/update-data
         run: npm ci
+        shell: bash
 
       - name: Run scraper
         working-directory: .github/actions/update-data
@@ -26,6 +39,7 @@ jobs:
           FUNPAY_USER_URL: "https://funpay.com/users/11006828/"
           TG_CHANNEL_URL: "https://t.me/sanzenand_fp"
         run: node scrape.js
+        shell: bash
 
       - name: Commit data
         run: |
@@ -36,3 +50,4 @@ jobs:
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
