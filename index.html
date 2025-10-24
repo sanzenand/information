@@ -23,7 +23,6 @@
     .bg-video{position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:-2}
     .bg-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg, rgba(0,0,0,0.9), rgba(0,0,0,0.95));z-index:-1}
     
-    /* Основной контейнер с улучшенной прокруткой */
     .container{display:flex;flex-direction:column;align-items:center;min-height:100vh;width:100%;}
     .wrap{width:100%;max-width:var(--maxw);background:linear-gradient(135deg, rgba(0,0,0,0.8), rgba(0,0,0,0.9));border-radius:20px;padding:25px;box-shadow:0 25px 80px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.05);backdrop-filter:blur(12px);animation:fadeInUp 0.8s cubic-bezier(0.23,1,0.32,1) both;position:relative;overflow:visible;opacity:0;transform:scale(0.95);margin:auto;}
     .wrap::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg, transparent, var(--accent-glow), transparent)}
@@ -80,7 +79,6 @@
     @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,255,255,0.2)}70%{box-shadow:0 0 0 10px rgba(255,255,255,0)}100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}}
     @keyframes glow{from{box-shadow:0 0 10px rgba(255,255,255,0.2);}to{box-shadow:0 0 30px rgba(255,255,255,0.3);}}
     
-    /* audio toggle button */
     #audioToggle {
       position: fixed;
       right: 16px;
@@ -111,7 +109,6 @@
       pointer-events: none;
     }
     
-    /* Telegram Widget Styles */
     .telegram-widget {
       margin-top: 20px;
       border-radius: 12px;
@@ -125,7 +122,6 @@
       min-height: 400px;
     }
     
-    /* Scrollbar styling */
     ::-webkit-scrollbar {
       width: 8px;
     }
@@ -140,12 +136,115 @@
       background: rgba(255,255,255,0.3);
     }
     
-    /* Content sections */
     .content-section {
       margin-bottom: 20px;
     }
     .content-section:last-child {
       margin-bottom: 0;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+    .nav-link {
+      color: var(--muted);
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: all 0.3s ease;
+      font-size: 14px;
+    }
+    .nav-link:hover, .nav-link.active {
+      color: var(--accent);
+      border-color: var(--accent-glow);
+      background: rgba(255,255,255,0.05);
+    }
+
+    .posts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .post-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 20px;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .post-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,0.1);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    }
+    .post-title {
+      color: var(--accent);
+      font-size: 18px;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+    .post-date {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 12px;
+      display: block;
+    }
+    .post-content {
+      color: #cccccc;
+      line-height: 1.6;
+      flex-grow: 1;
+    }
+    .post-tags {
+      display: flex;
+      gap: 8px;
+      margin-top: 15px;
+      flex-wrap: wrap;
+    }
+    .post-tag {
+      background: rgba(255,255,255,0.1);
+      color: var(--muted);
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+    }
+
+    .page {
+      display: none;
+    }
+    .page.active {
+      display: block;
+    }
+
+    .telegram-posts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    @media (max-width: 768px) {
+      .posts-grid {
+        grid-template-columns: 1fr;
+      }
+      .telegram-posts-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .posts-grid {
+        grid-template-columns: 1fr;
+      }
+      .telegram-posts-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -154,58 +253,72 @@
   <div class="bg-overlay"></div>
   
   <div class="container">
-    <div class="wrap" role="main" aria-label="sanzenand">
-      <header>
-        <div class="avatar pulse" id="avatar">
-          <span id="avatarInitial">S</span>
-        </div>
-        <div class="title">
-          <h1>sanzenand</h1>
-          <div class="subtitle">@sanzenand — продавец и разработчик ботов</div>
-        </div>
-      </header>
+    <div class="wrap">
+      <div class="nav-links">
+        <a href="#main" class="nav-link active" data-page="main">Главная</a>
+        <a href="#posts" class="nav-link" data-page="posts">Посты</a>
+      </div>
       
-      <div class="bio-card">
-        <div class="typing" id="typingArea" aria-live="polite"></div><span class="cursor" id="cursor" aria-hidden="true"></span>
-        
-        <div class="cols">
-          <div>
-            <div class="content-section">
-              <strong style="display:block;margin-bottom:8px;font-size:15px">О себе</strong>
-              <p class="muted">Я — @sanzenand. Предоставляю услуги: создание Telegram и Discord ботов, продажа аккаунтов в играх и другие цифровые сервисы.</p>
-            </div>
-            
-            <div class="content-section">
-              <strong style="display:block;margin-bottom:8px;font-size:15px">Гарантии</strong>
-              <p class="muted">Быстрые и честные сделки. Работаю с проверенными методами, не участвую в скамах и не создаю мошеннических ботов.</p>
-              <div class="guarantee-box">
-                <span class="warning-text">⚠️ НЕ УЧАСТВУЮ В СКАМЕ И НЕ СОЗДАЮ МОШЕННИЧЕСКИХ БОТОВ</span>
-              </div>
-            </div>
-            
-            <!-- Telegram Widget -->
-            <div class="telegram-widget">
-              <script async src="https://telegram.org/js/telegram-widget.js?22" 
-                      data-telegram-post="sanzenand_fp/2" 
-                      data-width="100%"
-                      data-dark="1"
-                      data-color="FFFFFF"
-                      data-userpic="false"></script>
-            </div>
+      <div id="main-page" class="page active">
+        <header>
+          <div class="avatar pulse" id="avatar">
+            <span>S</span>
           </div>
+          <div class="title">
+            <h1>sanzenand</h1>
+            <div class="subtitle">@sanzenand — продавец и разработчик ботов</div>
+          </div>
+        </header>
+        
+        <div class="bio-card">
+          <div class="typing" id="typingArea"></div><span class="cursor" id="cursor"></span>
           
-          <aside class="side" aria-label="Контакты">
+          <div class="cols">
             <div>
-              <strong style="display:block;margin-bottom:12px;font-size:15px">Контакты</strong>
-              <div class="links">
-                <a href="https://t.me/Sanzenand" target="_blank" rel="noopener noreferrer">Telegram — @Sanzenand</a>
-                <a href="https://t.me/mainsanzenand" target="_blank" rel="noopener noreferrer">БИО канал — @mainsanzenand</a>
-                <a href="https://t.me/sanzenand_fp" target="_blank" rel="noopener noreferrer">Отзывы канал — @sanzenand_fp</a>
-                <a href="https://t.me/newssanz" target="_blank" rel="noopener noreferrer">Игровой канал — @newssanz</a>
-                <a href="https://funpay.com/users/11006828/" target="_blank" rel="noopener noreferrer">FunPay — Sanzenand</a>
+              <div class="content-section">
+                <strong style="display:block;margin-bottom:8px;font-size:15px">О себе</strong>
+                <p class="muted">Я — @sanzenand. Предоставляю услуги: создание Telegram и Discord ботов, продажа аккаунтов в играх и другие цифровые сервисы.</p>
+              </div>
+              
+              <div class="content-section">
+                <strong style="display:block;margin-bottom:8px;font-size:15px">Гарантии</strong>
+                <p class="muted">Быстрые и честные сделки. Работаю с проверенными методами, не участвую в скамах и не создаю мошеннических ботов.</p>
+                <div class="guarantee-box">
+                  <span class="warning-text">⚠️ НЕ УЧАСТВУЮ В СКАМЕ И НЕ СОЗДАЮ МОШЕННИЧЕСКИХ БОТОВ</span>
+                </div>
               </div>
             </div>
-          </aside>
+            
+            <aside class="side">
+              <div>
+                <strong style="display:block;margin-bottom:12px;font-size:15px">Контакты</strong>
+                <div class="links">
+                  <a href="https://t.me/Sanzenand" target="_blank">Telegram — @Sanzenand</a>
+                  <a href="https://t.me/mainsanzenand" target="_blank">БИО канал — @mainsanzenand</a>
+                  <a href="https://t.me/sanzenand_fp" target="_blank">Отзывы канал — @sanzenand_fp</a>
+                  <a href="https://t.me/newssanz" target="_blank">Игровой канал — @newssanz</a>
+                  <a href="https://funpay.com/users/11006828/" target="_blank">FunPay — Sanzenand</a>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </div>
+      
+      <div id="posts-page" class="page">
+        <header>
+          <div class="avatar pulse" id="posts-avatar">
+            <span>S</span>
+          </div>
+          <div class="title">
+            <h1>Посты sanzenand</h1>
+            <div class="subtitle">Обновления, новости и мысли</div>
+          </div>
+        </header>
+        
+        <div class="bio-card">
+          <div class="telegram-posts-grid" id="telegram-posts-container"></div>
+          <div class="posts-grid" id="posts-container"></div>
         </div>
       </div>
       
@@ -213,8 +326,8 @@
     </div>
   </div>
   
-  <audio id="bgAudio" loop crossorigin="anonymous" preload="auto"></audio>
-  <button id="audioToggle" aria-pressed="false">Play</button>
+  <audio id="bgAudio" loop preload="auto"></audio>
+  <button id="audioToggle">Play</button>
   
   <script>
     const LOCAL_BG_VIDEO = 'background.mp4';
@@ -230,7 +343,40 @@
       "Попрошу вас подумать прежде чем: Спамить.",
       "Просить создать скам чего то, не имею отношения к скам-ботам⚠️."
     ];
-    
+
+    const telegramPosts = [2, 3, 19];
+
+    const posts = [
+      {
+        id: 1,
+        title: "Новые услуги по созданию ботов",
+        date: "2025-10-23",
+        content: "Расширил спектр услуг по созданию Telegram и Discord ботов. Теперь доступны более сложные интеграции с внешними API и системами.",
+        tags: ["услуги", "боты", "обновление"]
+      },
+      {
+        id: 2,
+        title: "Обновление гарантийной политики",
+        date: "2025-10-23",
+        content: "Улучшил условия гарантии для всех услуг. Теперь предоставляю расширенную поддержку в течение 30 дней после завершения работы.",
+        tags: ["гарантия", "обновление"]
+      },
+      {
+        id: 3,
+        title: "Новые отзывы на FunPay",
+        date: "2025-10-23",
+        content: "Получил несколько положительных отзывов за последние сделки. Рейтинг сохраняется на уровне 5/5. Благодарю всех за доверие!",
+        tags: ["отзывы", "funpay"]
+      },
+      {
+        id: 5,
+        title: "Улучшенная поддержка клиентов",
+        date: "2025-10-23",
+        content: "Теперь доступна круглосуточная поддержка для всех клиентов. Отвечаю на вопросы в течение 15 минут.",
+        tags: ["поддержка", "клиенты"]
+      }
+    ];
+
     function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
     
     async function urlExists(path){
@@ -252,7 +398,6 @@
         vid.muted = true;
         vid.playsInline = true;
         vid.className = 'bg-video';
-        vid.setAttribute('aria-hidden','true');
         document.body.prepend(vid);
         return;
       }
@@ -264,7 +409,10 @@
     
     async function applyAvatar(){
       const av = document.getElementById('avatar');
+      const postsAv = document.getElementById('posts-avatar');
       av.innerHTML = '';
+      postsAv.innerHTML = '';
+      
       if(await urlExists(LOCAL_AVATAR_VIDEO)){
         const v = document.createElement('video');
         v.src = LOCAL_AVATAR_VIDEO;
@@ -275,7 +423,8 @@
         v.style.width = '100%';
         v.style.height = '100%';
         v.style.objectFit = 'cover';
-        av.appendChild(v);
+        av.appendChild(v.cloneNode(true));
+        postsAv.appendChild(v);
         return;
       }
       if(await urlExists(LOCAL_AVATAR_IMAGE)){
@@ -285,10 +434,12 @@
         img.style.width = '100%';
         img.style.height = '100%';
         img.style.objectFit = 'cover';
-        av.appendChild(img);
+        av.appendChild(img.cloneNode(true));
+        postsAv.appendChild(img);
         return;
       }
-      av.innerHTML = '<span id="avatarInitial">S</span>';
+      av.innerHTML = '<span>S</span>';
+      postsAv.innerHTML = '<span>S</span>';
     }
     
     async function applyMusic(){
@@ -300,38 +451,16 @@
         audio.loop = true;
         btn.style.display = 'block';
         
-        const playAudio = async () => {
-          try {
-            await audio.play();
-            btn.textContent = 'Pause';
-            btn.setAttribute('aria-pressed', 'true');
-          } catch(e) {
-            btn.textContent = 'Play';
-            btn.setAttribute('aria-pressed', 'false');
-            const enableAudio = async () => {
-              await audio.play();
-              document.removeEventListener('click', enableAudio);
-              document.removeEventListener('touchstart', enableAudio);
-            };
-            document.addEventListener('click', enableAudio);
-            document.addEventListener('touchstart', enableAudio);
-          }
-        };
-        
-        // Автовоспроизведение только после взаимодействия пользователя
         btn.onclick = () => {
           if(audio.paused){
             audio.play();
             btn.textContent = 'Pause';
-            btn.setAttribute('aria-pressed', 'true');
           } else {
             audio.pause();
             btn.textContent = 'Play';
-            btn.setAttribute('aria-pressed', 'false');
           }
         };
         
-        // Предлагаем пользователю запустить музыку
         btn.textContent = 'Play Music';
         return;
       }
@@ -414,8 +543,95 @@
       animate();
       window.addEventListener('resize', resizeCanvas);
     }
+
+    function loadTelegramPosts() {
+      const container = document.getElementById('telegram-posts-container');
+      container.innerHTML = '';
+
+      telegramPosts.forEach(postId => {
+        const widget = document.createElement('div');
+        widget.className = 'telegram-widget';
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://telegram.org/js/telegram-widget.js?22';
+        script.setAttribute('data-telegram-post', `sanzenand_fp/${postId}`);
+        script.setAttribute('data-width', '100%');
+        script.setAttribute('data-dark', '1');
+        script.setAttribute('data-color', 'FFFFFF');
+        script.setAttribute('data-userpic', 'false');
+        widget.appendChild(script);
+        container.appendChild(widget);
+      });
+    }
+
+    function loadPosts() {
+      const postsContainer = document.getElementById('posts-container');
+      postsContainer.innerHTML = '';
+
+      posts.forEach(post => {
+        const postElement = document.createElement('div');
+        postElement.className = 'post-card';
+        postElement.innerHTML = `
+          <div class="post-title">${post.title}</div>
+          <span class="post-date">${formatDate(post.date)}</span>
+          <div class="post-content">${post.content}</div>
+          <div class="post-tags">
+            ${post.tags.map(tag => `<span class="post-tag">#${tag}</span>`).join('')}
+          </div>
+        `;
+        postsContainer.appendChild(postElement);
+      });
+    }
+
+    function formatDate(dateString) {
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      return new Date(dateString).toLocaleDateString('ru-RU', options);
+    }
+
+    function initNavigation() {
+      const navLinks = document.querySelectorAll('.nav-link');
+
+      const hash = window.location.hash.substring(1) || 'main';
+      showPage(hash);
+
+      navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const page = link.getAttribute('data-page');
+          window.location.hash = page;
+          showPage(page);
+        });
+      });
+
+      window.addEventListener('hashchange', () => {
+        const hash = window.location.hash.substring(1) || 'main';
+        showPage(hash);
+      });
+    }
+
+    function showPage(pageName) {
+      document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+      });
+
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.remove('active');
+      });
+
+      const targetPage = document.getElementById(`${pageName}-page`);
+      const targetLink = document.querySelector(`[data-page="${pageName}"]`);
+
+      if (targetPage && targetLink) {
+        targetPage.classList.add('active');
+        targetLink.classList.add('active');
+      }
+
+      if (pageName === 'posts') {
+        loadTelegramPosts();
+        loadPosts();
+      }
+    }
     
-    // Улучшенная инициализация
     (async function init(){
       try {
         await applyBackground();
@@ -423,8 +639,8 @@
         await applyMusic();
         typingLoop().catch(console.error);
         initParticles();
+        initNavigation();
         
-        // Плавное появление всего контента
         document.querySelector('.wrap').style.opacity = '1';
         document.querySelector('.wrap').style.transform = 'scale(1)';
       } catch (error) {
